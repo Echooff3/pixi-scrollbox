@@ -33,11 +33,13 @@ class Scrollbox extends PIXI.Container
      * @param {(boolean|number)} [options.fade] fade the scrollbar when not in use (true = 1000ms)
      * @param {number} [options.fadeWait=3000] time to wait before fading the scrollbar if options.fade is set
      * @param {(string|function)} [options.fadeEase=easeInOutSine] easing function to use for fading
+     * @param {HTMLElement} [options.divWheel=document.body] div to attach the wheel event
      */
     constructor(options)
     {
         super()
         this.options = defaults(options, DEFAULTS)
+        this.options.divWheel = this.options.divWheel || document.body
         this.ease = new Ease.list()
 
         /**
@@ -45,7 +47,7 @@ class Scrollbox extends PIXI.Container
          * you can use any function from pixi-viewport on content to manually move the content (see https://davidfig.github.io/pixi-viewport/jsdoc/)
          * @type {PIXI.extras.Viewport}
          */
-        this.content = this.addChild(new Viewport({ passiveWheel: this.options.stopPropagation, stopPropagation: this.options.stopPropagation, screenWidth: this.options.boxWidth, screenHeight: this.options.boxHeight }))
+        this.content = this.addChild(new Viewport({ passiveWheel: this.options.stopPropagation, stopPropagation: this.options.stopPropagation, screenWidth: this.options.boxWidth, screenHeight: this.options.boxHeight, divWheel: this.options.divWheel }))
         this.content
             .decelerate()
             .on('moved', () => this._drawScrollbars())
